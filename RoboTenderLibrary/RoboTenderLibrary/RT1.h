@@ -3,10 +3,7 @@
 #include <rl/xml/Document.h>
 #include <rl/xml/DomParser.h>
 #include <rl/xml/Stylesheet.h>
-
-#include "robot_hal.h"
 #include "kinematic.h"
-#include "pusico_driver.h"
 
 struct IKResult {
 	double d1;
@@ -16,7 +13,7 @@ struct IKResult {
 	double theta5;
 };
 
-class RT1 : public RobotHAL
+class RT1
 {
 public:
 	RT1(const char* xmlFile);
@@ -41,9 +38,9 @@ private:
 	rl::math::Transform toolTransform;
 	Kinematic<int> kinematic;
 private:
-	PusicoDriver *pPD6;
-	PusicoDriver *pPD7;
-	PusicoDriver *pPD8;
+	//PusicoDriver *pPD6;
+	//PusicoDriver *pPD7;
+	//PusicoDriver *pPD8;
 private:
 	int pd6_c;
 	int pd7_c;

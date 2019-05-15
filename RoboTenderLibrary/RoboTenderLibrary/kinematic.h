@@ -1,4 +1,4 @@
-
+/*
 #ifndef KINEMATIC_H
 #define KINEMATIC_H
 #include <iostream>
@@ -29,6 +29,7 @@ class Kinematic
 	private:
 		const char* xmlFile;
 		std::list<Joint*> jointList;
+		vector<shared_ptr<Joint>> _joints_ptr;
 
 };
 
@@ -68,56 +69,56 @@ bool Kinematic<T>::loadModel(const char* xmlFile)
 
 	// Setup Joint1 parameter
 	jointPtr = new Joint("Joint1", prismatic);
-	jointPtr->SetLimit(450.0, 0.0);
+	jointPtr->setLimit(450.0, 0.0);
 
 	d = 0.0; theta = 0.0; a = 0.0; alpha = 0.0;
 	alpha_rad = alpha * rl::math::DEG2RAD;
 	theta_rad = theta * rl::math::DEG2RAD;
-	jointPtr->SetDHParameter(d, theta_rad, a, alpha_rad);
+	jointPtr->setDHParameter(d, theta_rad, a, alpha_rad);
 	this->jointList.push_back(jointPtr);
 
 
 	// Setup Joint2 parameter
 	jointPtr = new Joint("Joint2", revolute);
-	jointPtr->SetLimit(180.0, -180.0);
+	jointPtr->setLimit(180.0, -180.0);
 
 	d = 0.0; theta = 0.0; a = 0.0; alpha = 0.0;
 	alpha_rad = alpha * rl::math::DEG2RAD;
 	theta_rad = theta * rl::math::DEG2RAD;
-	jointPtr->SetDHParameter(d, theta_rad, a, alpha_rad);
+	jointPtr->setDHParameter(d, theta_rad, a, alpha_rad);
 	this->jointList.push_back(jointPtr);
 
 
 	// Setup Joint3 parameter
 	jointPtr = new Joint("Joint3", revolute);
-	jointPtr->SetLimit(150.0, -150.0);
+	jointPtr->setLimit(150.0, -150.0);
 
 	d = 30.0; theta = 0.0; a = 280.0; alpha = 0.0;
 	alpha_rad = alpha * rl::math::DEG2RAD;
 	theta_rad = theta * rl::math::DEG2RAD;
-	jointPtr->SetDHParameter(d, theta_rad, a, alpha_rad);
+	jointPtr->setDHParameter(d, theta_rad, a, alpha_rad);
 	this->jointList.push_back(jointPtr);
 
 
 	// Setup Joint4 parameter
 	jointPtr = new Joint("Joint4", revolute);
-	jointPtr->SetLimit(150.0, -150.0);
+	jointPtr->setLimit(150.0, -150.0);
 
 	d = -30.0; theta = 0.0; a = 210.0; alpha = 0.0;
 	alpha_rad = alpha * rl::math::DEG2RAD;
 	theta_rad = theta * rl::math::DEG2RAD;
-	jointPtr->SetDHParameter(d, theta_rad, a, alpha_rad);
+	jointPtr->setDHParameter(d, theta_rad, a, alpha_rad);
 	this->jointList.push_back(jointPtr);
 
 
 	// Setup Joint5 parameter
 	jointPtr = new Joint("Joint5", revolute);
-	jointPtr->SetLimit(180.0, -180.0);
+	jointPtr->setLimit(180.0, -180.0);
 
 	d = 0.0; theta = 0.0; a = 0.0; alpha = 90.0;
 	alpha_rad = alpha * rl::math::DEG2RAD;
 	theta_rad = theta * rl::math::DEG2RAD;
-	jointPtr->SetDHParameter(d, theta_rad, a, alpha_rad);
+	jointPtr->setDHParameter(d, theta_rad, a, alpha_rad);
 	this->jointList.push_back(jointPtr);
 
 
@@ -155,4 +156,27 @@ rl::math::Transform Kinematic<T>::GenerateTransform(const double rx, const doubl
 	return transformation;
 }
 
-#endif
+#endif*/
+
+#pragma once
+#include "stdafx.h"
+
+
+namespace robotender {
+	class ROBOTENDERLIBRARY_API Kinematic {
+		public:
+			Kinematic();
+			~Kinematic();
+		public:
+			vector<shared_ptr<Joint>> loadModel(std::string xml_file);
+			rl::math::Transform generateTransform(const double rx, const double ry, const double rz, const double px, const double py, const double pz);
+			rl::math::Transform generateTransform(rl::math::Vector6 vector);
+			shared_ptr<Joint> getJoint(const int jointIndex);
+			void setToolFrame(rl::math::Transform transform);
+			rl::math::Transform getToolFrame();
+			rl::math::Transform caculateRecursiveFK(Eigen::VectorXd vector, int startIdx, int num);
+		private:
+	;		vector<shared_ptr<Joint>> _joints;
+			rl::math::Transform _tool_frame;
+	};
+}

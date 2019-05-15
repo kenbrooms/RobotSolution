@@ -3,7 +3,8 @@
 
 #include "stdafx.h"
 #include <iostream>
-#include "RoboTenderLibrary.h"
+#include "robotender_library.h"
+//#include "RoboTenderLibrary.h"
 
 using namespace robotender;
 using namespace log4cplus;

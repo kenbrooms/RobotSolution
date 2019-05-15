@@ -1,5 +1,4 @@
-#include "pch.h"
-#include <iostream>
+#include "stdafx.h"
 #include "RT1.h"
 #include "math_common.h"
 
@@ -32,10 +31,10 @@ void RT1::GoHome()
 	//this->pPD8->GoHome(1, 4000, 300, 320);
 	//this->pPD7->GoHome(1, 4000, 300, 320);
 	//this->pPD6->GoHome(1, 25600, 6000, 3000);
-	this->pPD8->GoHome(1, 4000, 300, 320, 4793);
-	this->pPD8->StartAbsStep(0);
-	this->pPD7->GoHome(1, 4000, 300, 320, 989);
-	this->pPD7->StartAbsStep(0);
+	//this->pPD8->GoHome(1, 4000, 300, 320, 4793);
+	//this->pPD8->StartAbsStep(0);
+	//this->pPD7->GoHome(1, 4000, 300, 320, 989);
+	//this->pPD7->StartAbsStep(0);
 }
 
 void RT1::TestFunction()
@@ -49,7 +48,7 @@ void RT1::TestFunction()
 		
 	//this->pPD7->GoHome(1, 4000, 300, 320, 989);
 	//this->pPD7->StartAbsStep(0);
-	this->pPD7->SetExtStopEnable(0);
+	//this->pPD7->SetExtStopEnable(0);
 	
 	
 	this->GetIKTransformC(-30.0, 0.0, 40.0, 300.0, 100.0, 100.0, result, result_num);
@@ -64,9 +63,9 @@ void RT1::TestFunction()
 			cout << endl << "D1: " << d1 << " Theta2: " << theta2*rl::math::RAD2DEG << " Theta3: " << theta3*rl::math::RAD2DEG << " Theta4: " << theta4*rl::math::RAD2DEG << " Theta5: " << theta5*rl::math::RAD2DEG << endl;
 			cout << endl << endl;
 				
-			this->pPD7->GoPosition(theta2*rl::math::RAD2DEG, 5.5, 1);
+			//this->pPD7->GoPosition(theta2*rl::math::RAD2DEG, 5.5, 1);
 			cout << "Finished Axis 2" << endl;
-			this->pPD8->GoPosition(theta3*rl::math::RAD2DEG, 3.0, 0);
+			//this->pPD8->GoPosition(theta3*rl::math::RAD2DEG, 3.0, 0);
 			cout << "Finished Axis 3" << endl;
 			Sleep(3000);
 	}
@@ -83,10 +82,10 @@ void RT1::TestFunction()
 			cout << endl << "D1: " << d1 << " Theta2: " << theta2*rl::math::RAD2DEG << " Theta3: " << theta3*rl::math::RAD2DEG << " Theta4: " << theta4*rl::math::RAD2DEG << " Theta5: " << theta5*rl::math::RAD2DEG << endl;
 			cout << endl << endl;
 				
-			this->pPD7->GoPosition(theta2*rl::math::RAD2DEG, 5.5, 1);
-			cout << "Finished Axis 2" << endl;
-			this->pPD8->GoPosition(theta3*rl::math::RAD2DEG, 3.0, 0);
-			cout << "Finished Axis 3" << endl;
+			//this->pPD7->GoPosition(theta2*rl::math::RAD2DEG, 5.5, 1);
+			//cout << "Finished Axis 2" << endl;
+			//this->pPD8->GoPosition(theta3*rl::math::RAD2DEG, 3.0, 0);
+			//cout << "Finished Axis 3" << endl;
 			Sleep(3000);
 	}
 
@@ -167,11 +166,11 @@ rl::math::Transform RT1::GetFKTransformC(const double d1, const double theta2, c
 	rl::math::Real r31, r32, r33;
 	rl::math::Real px, py, pz;
 	DHParam param1, param2, param3, param4, param5;
-	param1 = this->kinematic.GetJoint(0)->GetDHParameter();
-	param2 = this->kinematic.GetJoint(1)->GetDHParameter();
-	param3 = this->kinematic.GetJoint(2)->GetDHParameter();
-	param4 = this->kinematic.GetJoint(3)->GetDHParameter();
-	param5 = this->kinematic.GetJoint(4)->GetDHParameter();
+	param1 = this->kinematic.GetJoint(0)->getDHParameter();
+	param2 = this->kinematic.GetJoint(1)->getDHParameter();
+	param3 = this->kinematic.GetJoint(2)->getDHParameter();
+	param4 = this->kinematic.GetJoint(3)->getDHParameter();
+	param5 = this->kinematic.GetJoint(4)->getDHParameter();
 		
 	a0 = param1.a;
 	a1 = param2.a;
@@ -206,11 +205,11 @@ rl::math::Transform RT1::GetFKTransformC(const double d1, const double theta2, c
 
 void RT1::ControlJoint(const double j1, const double j2, const double j3, const double j4, const double j5)
 {
-	this->kinematic.GetJoint(0)->SetJointVal(j1); // prismatic
-	this->kinematic.GetJoint(1)->SetJointVal(j2*rl::math::DEG2RAD);
-	this->kinematic.GetJoint(2)->SetJointVal(j3*rl::math::DEG2RAD);
-	this->kinematic.GetJoint(3)->SetJointVal(j4*rl::math::DEG2RAD);
-	this->kinematic.GetJoint(4)->SetJointVal(j5*rl::math::DEG2RAD);
+	this->kinematic.GetJoint(0)->setJointVal(j1); // prismatic
+	this->kinematic.GetJoint(1)->setJointVal(j2*rl::math::DEG2RAD);
+	this->kinematic.GetJoint(2)->setJointVal(j3*rl::math::DEG2RAD);
+	this->kinematic.GetJoint(3)->setJointVal(j4*rl::math::DEG2RAD);
+	this->kinematic.GetJoint(4)->setJointVal(j5*rl::math::DEG2RAD);
 }
 
 
@@ -237,11 +236,11 @@ bool RT1::GetIKTransformC(const double rx, const double ry, const double rz, con
 	ey = T05.matrix()(1,3);
 	ez = T05.matrix()(2,3);
 	
-	param1 = this->kinematic.GetJoint(0)->GetDHParameter();
-	param2 = this->kinematic.GetJoint(1)->GetDHParameter();
-	param3 = this->kinematic.GetJoint(2)->GetDHParameter();
-	param4 = this->kinematic.GetJoint(3)->GetDHParameter();
-	param5 = this->kinematic.GetJoint(4)->GetDHParameter();
+	param1 = this->kinematic.GetJoint(0)->getDHParameter();
+	param2 = this->kinematic.GetJoint(1)->getDHParameter();
+	param3 = this->kinematic.GetJoint(2)->getDHParameter();
+	param4 = this->kinematic.GetJoint(3)->getDHParameter();
+	param5 = this->kinematic.GetJoint(4)->getDHParameter();
 
 	
 	d3 = param3.d;

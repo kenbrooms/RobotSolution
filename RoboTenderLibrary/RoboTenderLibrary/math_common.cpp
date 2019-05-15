@@ -37,11 +37,7 @@ bool MathCommon::equalWithTol(rl::math::Matrix a, rl::math::Matrix b, ::rl::math
 	{
 		throw "Those dimension of matrics is not equal!";
 	}
-	//tol_t.matrix<>().Constant(tol);
-	//tol_t.matrix().Constant(tol);
 	tol_t.matrix() = rl::math::Matrix::Constant(a.rows(), a.cols(), tol) ;
-		
-	//std::cout << "tol_t: " << tol_t.matrix() << " Size: " << tol_t.size() << std::endl;
 	r = ((a-b).cwiseAbs().matrix().array() <= tol_t.array()).all();
 		
 	return r;

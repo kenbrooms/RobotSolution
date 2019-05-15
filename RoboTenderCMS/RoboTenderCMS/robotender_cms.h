@@ -32,7 +32,8 @@
 #include <Qt3DRender/qattribute.h>
 #include <Qt3DRender/qpickevent.h>
 #include <Qt3DRender/qobjectpicker.h>
-#include "RoboTenderLibrary.h"
+
+#include "robotender_library.h"
 #include "path_planning.h"
 #include "path_data_manipulation.h"
 #include "robotender_cms_view.h"
@@ -53,10 +54,12 @@ private slots:
 	void handleSimulationButton();
 	void handleLoadButton();
 	void handleSaveButton();
+	void handleTopViewButton();
 
 private:
 	Ui::RoboTenderCMSClass ui;
-	list<PathPoint> pointList;
+	list<PathPoint> viaPointList;
+	list<PathPoint> quantizePointList;
 	RoboTenderCMS_View *pCMSView;
 	PathPlanning *pPathPlanning;
 private:

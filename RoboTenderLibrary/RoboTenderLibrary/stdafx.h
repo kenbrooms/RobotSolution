@@ -41,7 +41,6 @@
 #include "dh_table.h"
 #include "joint.h"
 #include "path_point.h"
-#include "algebra_data.h"
 #include "path_planning.h"
 
 #define GLOBAL_LOG_LEVEL WARN_LOG_LEVEL

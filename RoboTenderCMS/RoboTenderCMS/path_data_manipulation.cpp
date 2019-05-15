@@ -48,24 +48,24 @@ list<PathPoint> PathDataManipulation::LoadFromCSV(std::string filename)
 				z = std::stod(ret_field.at(2));
 				if (colIdx == 0)
 				{
-					pathPoint.SetPosition(x, y, z);
+					pathPoint.setPosition(x, y, z);
 				}
 				else {
-					pathPoint.SetRotation(x, y, z);
+					pathPoint.setRotation(x, y, z);
 				}
 			}
 			else if(colIdx == 2 || colIdx == 3){
 				time = std::stol(csv_str);
 				if (colIdx == 2)
 				{
-					pathPoint.SetDurationTime(time);
+					pathPoint.setDurationTime(time);
 				}
 				else if(colIdx == 3) {
-					pathPoint.SetAccelearationTime(time);
+					pathPoint.setAccelearationTime(time);
 				}
 			}
 			else {
-				pathPoint.SetAttr((char)(*csv_str.c_str()));
+				pathPoint.setAttr((char)(*csv_str.c_str()));
 			}
 		}
 		this->pointList.push_back(pathPoint);
@@ -94,7 +94,7 @@ void PathDataManipulation::SaveToCSV(std::string filename, list<PathPoint> point
 	item_str.clear();
 	for (it = this->pointList.begin(); it != this->pointList.end(); it++)
 	{
-		it->GetPosition(&x, &y, &z);
+		it->getPosition(&x, &y, &z);
 		streamObj << x;	
 		str_x = streamObj.str();
 		streamObj.str("");
@@ -106,7 +106,7 @@ void PathDataManipulation::SaveToCSV(std::string filename, list<PathPoint> point
 		streamObj.str("");
 		item_str = item_str + str_x + "," + str_y + "," + str_z + ";";
 		
-		it->GetRotation(&x, &y, &z);
+		it->getRotation(&x, &y, &z);
 		streamObj << x;	
 		str_x = streamObj.str();
 		streamObj.str("");
@@ -118,13 +118,13 @@ void PathDataManipulation::SaveToCSV(std::string filename, list<PathPoint> point
 		streamObj.str("");
 		item_str = item_str + str_x + "," + str_y + "," + str_z + ";";
 		
-		it->GetDurationTime(&time);
+		time = it->getDurationTime();
 		item_str = item_str + std::to_string(time) + ";";
 		
-		it->GetAccelerationTime(&time);
+		time = it->getAccelerationTime();
 		item_str = item_str + std::to_string(time) + ";";
 		
-		it->GetAttr(&attr);
+		attr = it->getAttr();
 		item_str = item_str + attr + ";\n";
 	}
 	
@@ -138,7 +138,7 @@ void PathDataManipulation::SaveToCSV(std::string filename, list<PathPoint> point
 	}
 	else {
 		cout << "Can't open file \"" << filename.c_str() << '\"' << endl;
-		throw;
+		//throw;
 	}
 		
 }

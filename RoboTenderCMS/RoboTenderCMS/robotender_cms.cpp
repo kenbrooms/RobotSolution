@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include <memory>
-#include "RoboTenderCMS.h"
+#include "robotender_cms.h"
 #include <QtCore/QDebug>
 
 #include <boost/algorithm/string.hpp>
@@ -38,6 +38,7 @@ RoboTenderCMS::RoboTenderCMS(QWidget *parent)
 	connect(this->ui.btnSimulation, SIGNAL(released()), this, SLOT(handleSimulationButton()));
 	connect(this->ui.btnLoadPoint, SIGNAL(released()), this, SLOT(handleLoadButton()));
 	connect(this->ui.btnSavePoint, SIGNAL(released()), this, SLOT(handleSaveButton()));
+	connect(this->ui.btnTopView, SIGNAL(released()), this, SLOT(handleTopViewButton()));
 	
 	initialized = true;
 	LOG4CPLUS_DEBUG(pLogger, "RoboTenderCMS had been initialized.");
@@ -57,11 +58,9 @@ void RoboTenderCMS::handleRemoveButton()
 
 void RoboTenderCMS::handleSimulationButton()
 {
-	list<PathPoint> accPointList;
-	this->pCMSView->GetDataFromView(&this->pointList);
-	//this->pPathPlanning->EstimateAccPoints(&this->pointList, &accPointList);
-	this->pPathPlanning->Plan(&this->pointList);
-	this->pCMSView->Update3DView(&this->pointList);
+	this->pCMSView->GetDataFromView(&this->viaPointList);
+	this->pPathPlanning->plan(&this->viaPointList, &this->quantizePointList);
+	this->pCMSView->Update3DView(&this->viaPointList, &this->quantizePointList);
 	LOG4CPLUS_TRACE(pLogger, "Clicked Simulation Button");
 
 }
@@ -70,8 +69,8 @@ void RoboTenderCMS::handleLoadButton()
 {
 	PathDataManipulation pathData;
 	QString filename = QFileDialog::getOpenFileName(this, tr("Open File"), "C:\\Users\\kenbr\\data", "csv files(*.csv)");
-	this->pointList = pathData.LoadFromCSV(filename.toStdString());
-	this->pCMSView->UpdateTableView(&this->pointList);
+	this->viaPointList = pathData.LoadFromCSV(filename.toStdString());
+	this->pCMSView->UpdateTableView(&this->viaPointList);
 	LOG4CPLUS_TRACE(pLogger, "Load CSV");
 }
 
@@ -79,9 +78,15 @@ void RoboTenderCMS::handleSaveButton()
 {
 	PathDataManipulation pathData;
 	QString filename = QFileDialog::getSaveFileName(this, tr("Save File"), "C:\\Users\\kenbr\\data", "csv files(*.csv)");	
-	this->pCMSView->GetDataFromView(&this->pointList);
-	pathData.SaveToCSV(filename.toStdString(), this->pointList);
+	this->pCMSView->GetDataFromView(&this->viaPointList);
+	pathData.SaveToCSV(filename.toStdString(), this->viaPointList);
 }
+
+void RoboTenderCMS::handleTopViewButton()
+{
+	this->pCMSView->GoToTopView();
+}
+
 
 void RoboTenderCMS::resizeEvent(QResizeEvent *pQEvent)
 {

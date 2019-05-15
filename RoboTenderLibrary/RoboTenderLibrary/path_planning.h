@@ -11,15 +11,15 @@ namespace robotender {
 		PathPlanning();
 		~PathPlanning();
 	public:
-		void InsertPoint(PathPoint point, long idx);
-		void RemovePoint(long idx);
-		void Plan(list<PathPoint> *pointList);
-		void EstimateAccPoints(list<PathPoint> *viaPointList, list<PathPoint> *accPointList);
-		void QuantizePoints(list<PathPoint> *accPointList, list<PathPoint> *quantizePointList, long quantizeStep);
+		void insertPoint(PathPoint point, long idx);
+		void removePoint(long idx);
+		void plan(list<PathPoint> *viaPointList, list<PathPoint> *quantizePointList);
+		void estimateAccPoints(list<PathPoint> *viaPointList, list<PathPoint> *accPointList);
+		void quantizePoints(list<PathPoint> *accPointList, list<PathPoint> *quantizePointList, long quantizeStep);
 	private:
-		list<PathPoint> pointList;
-		log4cplus::SharedAppenderPtr pConsoleAppender;
-		log4cplus::Logger pLogger;
+		list<PathPoint> _point_list;
+		log4cplus::SharedAppenderPtr _console_appender;
+		log4cplus::Logger _logger;
 	};
 
 }

@@ -13,15 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="標頭檔\kinematic">
+      <UniqueIdentifier>{e4ad74ef-f1e0-404a-9e26-bb33844d6d1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="來源檔案\kinematic">
+      <UniqueIdentifier>{608ab958-12db-4cac-8593-cdebc29add31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="RoboTenderLibrary.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="dh_table.h">
@@ -39,15 +42,18 @@
     <ClInclude Include="path_planning.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="algebra_data.h">
+    <ClInclude Include="kinematic.h">
+      <Filter>標頭檔\kinematic</Filter>
+    </ClInclude>
+    <ClInclude Include="rt1_kinematic.h">
+      <Filter>標頭檔\kinematic</Filter>
+    </ClInclude>
+    <ClInclude Include="robotender_library.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="RoboTenderLibrary.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="dllmain.cpp">
@@ -68,7 +74,13 @@
     <ClCompile Include="path_planning.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="algebra_data.cpp">
+    <ClCompile Include="kinematic.cpp">
+      <Filter>來源檔案\kinematic</Filter>
+    </ClCompile>
+    <ClCompile Include="rt1_kinematic.cpp">
+      <Filter>來源檔案\kinematic</Filter>
+    </ClCompile>
+    <ClCompile Include="robotender_library.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>

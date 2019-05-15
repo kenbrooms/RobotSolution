@@ -39,9 +39,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RoboTenderCMS.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="csv_worker.cpp">
       <Filter>Source Files\common</Filter>
     </ClCompile>
@@ -54,12 +51,15 @@
     <ClCompile Include="scenemodifier.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="robotender_cms.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="RoboTenderCMS.h">
+    <QtMoc Include="scenemodifier.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="scenemodifier.h">
+    <QtMoc Include="robotender_cms.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

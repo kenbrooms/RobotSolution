@@ -26,7 +26,7 @@ void RoboTenderCMS_View::UpdateTableView(list<PathPoint> *pointList)
 	{
 		pTableWidget->insertRow(pTableWidget->rowCount());
 		
-		it->GetPosition(&x, &y, &z);
+		it->getPosition(&x, &y, &z);
 		streamObj << x;	
 		str_x = streamObj.str();
 		streamObj.str("");
@@ -39,7 +39,7 @@ void RoboTenderCMS_View::UpdateTableView(list<PathPoint> *pointList)
 		item_str = str_x + "," + str_y + "," + str_z;
 		pTableWidget->setItem(pTableWidget->rowCount()-1, 0, new QTableWidgetItem(item_str.c_str()));
 		
-		it->GetRotation(&x, &y, &z);
+		it->getRotation(&x, &y, &z);
 		streamObj << x;	
 		str_x = streamObj.str();
 		streamObj.str("");
@@ -52,15 +52,15 @@ void RoboTenderCMS_View::UpdateTableView(list<PathPoint> *pointList)
 		item_str = str_x + "," + str_y + "," + str_z;
 		pTableWidget->setItem(pTableWidget->rowCount()-1, 1, new QTableWidgetItem(item_str.c_str()));
 	
-		it->GetDurationTime(&time);
+		time = it->getDurationTime();
 		item_str = std::to_string(time);
 		pTableWidget->setItem(pTableWidget->rowCount()-1, 2, new QTableWidgetItem(item_str.c_str()));
 		
-		it->GetAccelerationTime(&time);
+		time = it->getAccelerationTime();
 		item_str = std::to_string(time);
 		pTableWidget->setItem(pTableWidget->rowCount()-1, 3, new QTableWidgetItem(item_str.c_str()));
 		
-		it->GetAttr(&attr);
+		attr = it->getAttr();
 		item_str = attr;
 		pTableWidget->setItem(pTableWidget->rowCount()-1, 4, new QTableWidgetItem(item_str.c_str()));
 
@@ -85,26 +85,26 @@ void RoboTenderCMS_View::GetDataFromView(list<PathPoint> *pointList)
 		item_str = this->pTableWidget->item(rowIdx, 0)->text();
 		boost::split(strs, item_str.toStdString(),boost::is_any_of(","));
 		x = std::stod(strs.at(0)); y = std::stod(strs.at(1)); z = std::stod(strs.at(2));
-		point.SetPosition(x, y, z);
+		point.setPosition(x, y, z);
 		strs.clear();
 
 		item_str = this->pTableWidget->item(rowIdx, 1)->text();
 		boost::split(strs, item_str.toStdString(),boost::is_any_of(","));
 		x = std::stod(strs.at(0)); y = std::stod(strs.at(1)); z = std::stod(strs.at(2));
-		point.SetRotation(x, y, z);
+		point.setRotation(x, y, z);
 		strs.clear();
 			
 		item_str = this->pTableWidget->item(rowIdx, 2)->text();
 		time = std::stol(item_str.toStdString());
-		point.SetDurationTime(time);
+		point.setDurationTime(time);
 		
 		item_str = this->pTableWidget->item(rowIdx, 3)->text();
 		time = std::stol(item_str.toStdString());
-		point.SetAccelearationTime(time);
+		point.setAccelearationTime(time);
 		
 		item_str = this->pTableWidget->item(rowIdx, 4)->text();
 		attr = (*item_str.toStdString().c_str());
-		point.SetAttr(attr);
+		point.setAttr(attr);
 		pointList->push_back(point);
 	}
 }
@@ -161,8 +161,7 @@ void RoboTenderCMS_View::AddItem()
 		}
 	}
 }
-
-void RoboTenderCMS_View::Update3DView(std::list<PathPoint> *viaPointList)
+void RoboTenderCMS_View::Update3DView(std::list<PathPoint> *viaPointList, std::list<PathPoint> *quantizePointList)
 {
 	std::list<PathPoint>::iterator it;
 	std::list<PathPoint>::iterator prevIt;
@@ -176,10 +175,10 @@ void RoboTenderCMS_View::Update3DView(std::list<PathPoint> *viaPointList)
 
 	this->entityList.clear();
 	this->pathEntityList.clear();
-	
+
 	for (it = viaPointList->begin(); it != viaPointList->end(); it++)
 	{
-		it->GetPosition(&px, &py, &pz);
+		it->getPosition(&px, &py, &pz);
 		transform = new Qt3DCore::QTransform();
 		transform->setTranslation(QVector3D(px, py, pz));
 		transform->setScale(1.0f);
@@ -200,10 +199,14 @@ void RoboTenderCMS_View::Update3DView(std::list<PathPoint> *viaPointList)
 		
 		this->entityList.push_back(smallGreenSphere);
 
-		if (it != viaPointList->begin())
+	}
+
+	for (it = quantizePointList->begin(); it != quantizePointList->end(); it++)
+	{
+		if (it != quantizePointList->begin())
 		{
-			it->GetPosition(&px, &py, &pz);
-			prevIt->GetPosition(&ppx, &ppy, &ppz);
+			it->getPosition(&px, &py, &pz);
+			prevIt->getPosition(&ppx, &ppy, &ppz);
 			this->pathEntityList.push_back(this->DrawLine({ (float)ppx, (float)ppy, (float)ppz }, { (float)px, (float)py, (float)pz }, Qt::black, this->rootEntity));
 			prevIt = it;
 		}
@@ -229,13 +232,9 @@ void RoboTenderCMS_View::Init3DView()
 	this->rootEntity = new Qt3DCore::QEntity();
 	
 	// Camera
-	Qt3DRender::QCamera *cameraEntity = this->m_view->camera();
-
-	cameraEntity->lens()->setPerspectiveProjection(45.0f, 16.0f / 9.0f, 0.1f, 2000.0f);
-	cameraEntity->setPosition(QVector3D(0, 0, 1000.0f));
-	cameraEntity->setUpVector(QVector3D(0, 1, 0));
-	cameraEntity->setViewCenter(QVector3D(0, 0, 0));
+	this->GoToTopView();
 	
+	Qt3DRender::QCamera *cameraEntity = this->m_view->camera();
 	Qt3DCore::QEntity *lightEntity = new Qt3DCore::QEntity(this->rootEntity);
 	Qt3DRender::QPointLight *light = new Qt3DRender::QPointLight(lightEntity);
 	light->setColor("white");
@@ -259,6 +258,18 @@ void RoboTenderCMS_View::Init3DView()
 	// Set root object of the scene
 	this->m_view->setRootEntity(this->rootEntity);
 	this->DrawAxis();
+	this->UpdateRobotArm();
+}
+
+void RoboTenderCMS_View::GoToTopView()
+{
+	Qt3DRender::QCamera *cameraEntity = this->m_view->camera();
+
+	cameraEntity->lens()->setPerspectiveProjection(45.0f, 16.0f / 9.0f, 0.1f, 2000.0f);
+	cameraEntity->setPosition(QVector3D(0, 0, 1000.0f));
+	cameraEntity->setUpVector(QVector3D(0, 1, 0));
+	cameraEntity->setViewCenter(QVector3D(0, 0, 0));
+
 }
 
 shared_ptr<Qt3DCore::QEntity> RoboTenderCMS_View::DrawLine(const QVector3D& start, const QVector3D& end, const QColor& color, Qt3DCore::QEntity *_rootEntity)
@@ -327,4 +338,55 @@ shared_ptr<Qt3DCore::QEntity> RoboTenderCMS_View::DrawLine(const QVector3D& star
 	lineEntity->addComponent(material);
 	
 	return lineEntity;
+}
+
+void RoboTenderCMS_View::UpdateRobotArm()
+{
+	QUrl data = QUrl::fromLocalFile("C:\\Users\\kenbr\\data\\STL\\J1.stl");
+	Qt3DCore::QEntity *flyingwedge = new Qt3DCore::QEntity(this->rootEntity);
+
+	Qt3DExtras::QPhongMaterial *material = new Qt3DExtras::QPhongMaterial();
+	//material->setDiffuse(QColor(254, 254, 254));
+	material->setSpecular(Qt::white);
+	material->setShininess(10);
+	material->setAmbient(Qt::Key_Blue);
+
+	Qt3DCore::QTransform *transform = new Qt3DCore::QTransform;
+	transform->setTranslation(QVector3D(0, 0, 100));
+	transform->setRotation(QQuaternion::fromAxisAndAngle(QVector3D(0, 0, 1), 30.0f));
+	
+	Qt3DRender::QMesh *flyingwedgeMesh = new Qt3DRender::QMesh;
+	flyingwedgeMesh->setMeshName("FlyingWedge");
+	flyingwedgeMesh->setSource(data);
+	flyingwedge->addComponent(flyingwedgeMesh);
+	flyingwedge->addComponent(material);
+	flyingwedge->addComponent(transform);
+	/*
+	// Cylinder shape data
+	Qt3DExtras::QCylinderMesh *cylinder = new Qt3DExtras::QCylinderMesh();
+	cylinder->setRadius(5);
+	cylinder->setLength(200);
+	cylinder->setRings(100);
+	cylinder->setSlices(20);
+
+	Qt3DExtras::QPhongMaterial* greenMaterial;
+	greenMaterial = new Qt3DExtras::QPhongMaterial;
+	greenMaterial->setSpecular(Qt::white);
+	greenMaterial->setShininess(10);
+	greenMaterial->setAmbient(Qt::Key_Blue);
+
+	// CylinderMesh Transform
+	Qt3DCore::QTransform *cylinderTransform = new Qt3DCore::QTransform;
+	cylinderTransform->setScale(1.0f);
+	//cylinderTransform->setRotation(QQuaternion::fromAxisAndAngle(QVector3D(0, 0, 1), 90.0f));
+	//cylinderTransform->setRotation(QQuaternion::rotationTo(QVector3D(0, 1, 1), QVector3D(0, 0, 30)));
+	cylinderTransform->setRotation(QQuaternion::fromEulerAngles(QVector3D(20, 0, 0)));
+	cylinderTransform->setRotation(QQuaternion::fromEulerAngles(QVector3D(0, 90, 0)));
+	cylinderTransform->setTranslation(QVector3D(0, 100, 0));
+
+	// Cylinder
+	Qt3DCore::QEntity *cylinderEntity = new Qt3DCore::QEntity(this->rootEntity);
+	cylinderEntity->addComponent(greenMaterial);
+	cylinderEntity->addComponent(cylinder);
+	cylinderEntity->addComponent(cylinderTransform);*/
 }

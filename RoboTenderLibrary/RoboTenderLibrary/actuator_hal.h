@@ -2,7 +2,7 @@
 #ifndef _ACTUATOR_HAL
 #define _ACTUATOR_HAL
 
-#include "pch.h"
+#include "stdafx.h"
 
 class ActuatorHAL
 {

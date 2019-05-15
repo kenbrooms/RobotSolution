@@ -8,6 +8,7 @@
 #include <Qt3DExtras/qforwardrenderer.h>
 #include <Qt3DExtras/qphongmaterial.h>
 #include <Qt3DExtras/qorbitcameracontroller.h>
+#include <Qt3DExtras/qcylindermesh.h>
 
 #include <Qt3DInput/QInputAspect>
 
@@ -24,7 +25,6 @@
 #include <Qt3DRender/qrenderpass.h>
 #include <Qt3DRender/qsceneloader.h>
 #include <Qt3DRender/qpointlight.h>
-
 #include "ui_RoboTenderCMS.h"
 
 class RoboTenderCMS_View
@@ -32,8 +32,6 @@ class RoboTenderCMS_View
 	public:
 		RoboTenderCMS_View(Ui::RoboTenderCMSClass* ui):ui(ui)
 		{
-	
-	
 				this->m_view = new Qt3DExtras::Qt3DWindow();
 				this->m_view->defaultFrameGraph()->setClearColor(QColor(QRgb(0x4d4d4f)));
 				
@@ -59,11 +57,13 @@ class RoboTenderCMS_View
 		void UpdateTableView(std::list<PathPoint> *pointList);
 		void GetDataFromView(std::list<PathPoint> *pointList);
 		void Init3DView();
-		void Update3DView(std::list<PathPoint> *pointList);
+		void Update3DView(std::list<PathPoint> *viaPointList, std::list<PathPoint> *quantizePointList);
 		shared_ptr<Qt3DCore::QEntity> DrawLine(const QVector3D& start, const QVector3D& end, const QColor& color, Qt3DCore::QEntity *_rootEntity);
 		void DrawAxis();
 		void RemoveItem();
 		void AddItem();
+		void GoToTopView();
+		void UpdateRobotArm();
 	private:
 		Ui::RoboTenderCMSClass *ui;
 		QMainWindow* parent;
